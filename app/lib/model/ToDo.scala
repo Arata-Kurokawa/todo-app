@@ -5,8 +5,8 @@ import ixias.util.EnumStatus
 
 import java.time.LocalDateTime
 
-import ToDo._
-case class ToDo(
+import Todo._
+case class Todo(
   id:         Option[Id],
   categoryId: Long,
   title:      String,
@@ -16,11 +16,11 @@ case class ToDo(
   createdAt:  LocalDateTime = NOW
 ) extends EntityModel[Id]
 
-object ToDo {
+object Todo {
   val  Id = the[Identity[Id]]
-  type Id = Long @@ ToDo
-  type WithNoId = Entity.WithNoId [Id, ToDo]
-  type EmbeddedId = Entity.EmbeddedId[Id, ToDo]
+  type Id = Long @@ Todo
+  type WithNoId = Entity.WithNoId [Id, Todo]
+  type EmbeddedId = Entity.EmbeddedId[Id, Todo]
 
   // ステータス定義
   //~~~~~~~~~~~~~~~~~
@@ -34,7 +34,7 @@ object ToDo {
   // INSERT時のIDがAutoincrementのため,IDなしであることを示すオブジェクトに変換
   def apply(categoryId: Long, title: String, body: String, state: Status): WithNoId = {
     new Entity.WithNoId(
-      new ToDo(
+      new Todo(
         id         = None,
         categoryId = categoryId,
         title      = title,

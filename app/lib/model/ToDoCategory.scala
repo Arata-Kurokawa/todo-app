@@ -3,8 +3,8 @@ package lib.model
 import ixias.model._
 import java.time.LocalDateTime
 
-import ToDoCategory._
-case class ToDoCategory(
+import TodoCategory._
+case class TodoCategory(
   id:        Option[Id],
   name:      String,
   slug:      String,
@@ -13,16 +13,16 @@ case class ToDoCategory(
   createdAt: LocalDateTime = NOW
 ) extends EntityModel[Id]
 
-object ToDoCategory {
+object TodoCategory {
   val  Id = the[Identity[Id]]
-  type Id = Long @@ ToDoCategory
-  type WithNoId = Entity.WithNoId [Id, ToDoCategory]
-  type EmbeddedId = Entity.EmbeddedId[Id, ToDoCategory]
+  type Id = Long @@ TodoCategory
+  type WithNoId = Entity.WithNoId [Id, TodoCategory]
+  type EmbeddedId = Entity.EmbeddedId[Id, TodoCategory]
 
   // INSERT時のIDがAutoincrementのため,IDなしであることを示すオブジェクトに変換
   def apply(name: String, slug: String, color: Short): WithNoId = {
     new Entity.WithNoId(
-      new ToDoCategory(
+      new TodoCategory(
         id    = None,
         name  = name,
         slug  = slug,
