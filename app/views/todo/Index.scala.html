@@ -4,9 +4,17 @@
  *
  *@
 
-@(vv: model.ViewValueCommon)
+@(vv: model.ViewValueCommon, list: Seq[lib.model.Todo.EmbeddedId])
 @common.Default(vv){
-   <ul>
-    <li><a>Todo一覧</a></li>
-   </ul>
+  <a href="@routes.TodoController.add">TODO作成</a>
+  <table>
+  @for(todo <- list) {
+    <tr>
+      <p>@todo.v.title</p>
+      <p>@todo.v.body</p>
+      <p>@todo.v.state.name</p>
+      <p>カテゴリ名</p>
+    </tr>
+  }
+  </table>
 }

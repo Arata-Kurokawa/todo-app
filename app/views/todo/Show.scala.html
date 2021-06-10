@@ -4,9 +4,9 @@
  *
  *@
 
-@(vv: model.ViewValueCommon)
+@(vv: model.ViewValueCommon, todo: lib.model.Todo.EmbeddedId)
 @common.Default(vv){
-   <ul>
-    <li><a>Todo詳細</a></li>
-   </ul>
+   <p>@todo.v.title</p>
+   <p>@todo.v.body</p>
+   <p>@todo.v.categoryId</p>
 }

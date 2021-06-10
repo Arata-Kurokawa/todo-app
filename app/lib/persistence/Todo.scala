@@ -64,4 +64,10 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
         }
       } yield old
     }
+
+  /**
+   * All Todo Data
+   */
+  def all(): Future[Seq[EntityEmbeddedId]] =
+    RunDBAction(TodoTable, "slave") { _.result }
 }
