@@ -59,7 +59,6 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       BadRequest(views.html.todo.Add(vv, formWithErrors))
     },
     todoData => {
-      println(todoData)
       /* binding success, you get the actual value. */
       val createResult = Await.ready(TodoModel.create(todoData.title, todoData.body, todoData.categoryId), Duration.Inf)
 
