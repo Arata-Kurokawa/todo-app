@@ -15,8 +15,8 @@ case class TodoCategoryTable[P <: JdbcProfile]()(implicit val driver: P)
   // Definition of DataSourceName
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   lazy val dsn = Map(
-    "master" -> DataSourceName("ixias.db.mysql://master/to_do_category"),
-    "slave"  -> DataSourceName("ixias.db.mysql://slave/to_do_category")
+    "master" -> DataSourceName("ixias.db.mysql://master/to_do"),
+    "slave"  -> DataSourceName("ixias.db.mysql://slave/to_do")
   )
 
   // Definition of Query
