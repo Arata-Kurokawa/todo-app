@@ -5,16 +5,18 @@
  *@
 
 @import helper._
-@import forms.TodoData
 
-@(vv: model.ViewValueCommon, form: Form[TodoData], todoCategoryOptions: Seq[(String, String)])(implicit request: RequestHeader, messages: Messages)
+@import forms.TodoAddData
+@import helpers.TodoFormHelper
+
+@(vv: model.ViewValueCommon, form: Form[TodoAddData], fromHelper: TodoFormHelper)(implicit request: RequestHeader, messages: Messages)
 
 @common.Default(vv){
   @helper.form(action = routes.TodoController.create) {
     @CSRF.formField 
     @helper.inputText(form("title"))
     @helper.inputText(form("body"))
-    @helper.select(form("categoryId"), options = todoCategoryOptions)
+    @helper.select(form("categoryId"), options = fromHelper.categoryOptions)
     <input type="submit" value="作成">
     <a href="@routes.TodoController.index">戻る</a>
   }

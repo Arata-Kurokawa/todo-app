@@ -19,9 +19,15 @@ object TodoModel {
     repository.all()
   }
 
-  def create(title: String, body: String, categoryId: Int): Future[Id] = {
+  def create(title: String, body: String, categoryId: Long): Future[Id] = {
     val repository = onMySQL.TodoRepository
     val entity = Todo(categoryId, title, body, Todo.Status.WAITING)
     repository.add(entity)
+  }
+
+  def update(todo: EmbeddedId, title: String, body: String, state: Short, categoryId: Long): Future[Option[EmbeddedId]] = {
+    val repository = onMySQL.TodoRepository
+    val newTodo = todo.v.copy(title = title, body = body, state = Todo.Status(state), categoryId = categoryId)
+    repository.update(new Todo.EmbeddedId(newTodo))
   }
 }
