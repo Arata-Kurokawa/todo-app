@@ -43,3 +43,51 @@ body {
 .info {
   display: none;
 }
+
+
+.todo-list {
+
+}
+
+.todo-card {
+  border-bottom: 1px solid rgb(56, 68, 77);
+  width:         100%;
+  padding:       5px;
+}
+
+.todo-card_head {
+  display: flex;
+  align-items: center;
+}
+
+.todo-card_title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.todo-card_body {
+  font-size: 12px;
+}
+
+.todo-card_state {
+  font-size: 10px;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.todo-card_state__wating {
+  background-color: pink;
+}
+
+.todo-card_state__inprogress {
+  background-color: yellowgreen;
+}
+
+.todo-card_state__completed {
+  background-color: silver;
+}
+
+.todo-card .category {
+
+}

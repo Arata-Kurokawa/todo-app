@@ -35,7 +35,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
 
     val vv = ViewValueHome(
       title  = "Todo一覧",
-      cssSrc = Seq("main.css"),
+      cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
     Ok(views.html.todo.Index(vv, todoList))
@@ -44,7 +44,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   def add() = Action { implicit req =>
     val vv = ViewValueHome(
       title  = "Todo追加",
-      cssSrc = Seq("main.css"),
+      cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
 
@@ -64,7 +64,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       formWithErrors => {
         val vv = ViewValueHome(
           title  = "Todo追加",
-          cssSrc = Seq("main.css"),
+          cssSrc = Seq("reset.css", "main.css"),
           jsSrc  = Seq("main.js")
         )
 
@@ -92,7 +92,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   def edit(id: Long) = Action { implicit req =>
     val vv = ViewValueHome(
       title  = "Todo編集",
-      cssSrc = Seq("main.css"),
+      cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
 
@@ -107,7 +107,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       case Failure(e) => throw e
     }
 
-    Ok(views.html.todo.Edit(vv, form, helper, todo.id))
+    Ok(views.html.todo.Edit(vv, form, helper, id))
   }
 
   def update(id: Long) = Action { implicit req => 
@@ -117,7 +117,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       formWithErrors => {
         val vv = ViewValueHome(
           title  = "Todo追加",
-          cssSrc = Seq("main.css"),
+          cssSrc = Seq("reset.css", "main.css"),
           jsSrc  = Seq("main.js")
         )
 
@@ -130,11 +130,6 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
         BadRequest(views.html.todo.Edit(vv, formWithErrors, helper, id))
       },
       todoData => {
-        val todo = Await.ready(getTodo(id), Duration.Inf).value.get match {
-          case Success(t) => t
-          case Failure(e) => throw e
-        }
-
         Await.ready(
           for {
             todo <- getTodo(id)
@@ -153,7 +148,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   def show(id: Long) = Action { implicit req =>
     val vv = ViewValueHome(
       title  = "Todo詳細",
-      cssSrc = Seq("main.css"),
+      cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
 

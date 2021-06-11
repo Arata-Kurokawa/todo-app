@@ -5,16 +5,20 @@
  *@
 
 @(vv: model.ViewValueCommon, list: Seq[lib.model.Todo.EmbeddedId])
+
 @common.Default(vv){
   <a href="@routes.TodoController.add">TODO作成</a>
-  <table>
+  <ul class="todo-list">
   @for(todo <- list) {
-    <tr>
-      <p>@todo.v.title</p>
-      <p>@todo.v.body</p>
-      <p>@todo.v.state.name</p>
-      <p>カテゴリ名</p>
-    </tr>
+    <li>
+      <div class="todo-card">
+        <div class="todo-card_head">
+          <p class="todo-card_title">@todo.v.title</p>
+          <p class="todo-card_state">@todo.v.state.name</p>
+        </div>
+        <p class="todo-card_body">@todo.v.body</p>
+      </div>  
+    </li>
   }
-  </table>
+  </ul>
 }
