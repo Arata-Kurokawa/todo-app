@@ -11,6 +11,7 @@ GET     /todo                         controllers.TodoController.index
 GET     /todo/add                     controllers.TodoController.add
 GET     /todo/:id/edit                controllers.TodoController.edit(id: Long)
 POST    /todo/:id/update              controllers.TodoController.update(id: Long)
+POST    /todo/:id/remove              controllers.TodoController.remove(id: Long)
 GET     /todo/:id                     controllers.TodoController.show(id: Long)
 POST    /todo/create                  controllers.TodoController.create
 

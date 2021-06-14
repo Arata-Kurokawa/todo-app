@@ -50,28 +50,36 @@ body {
 }
 
 .todo-card {
-  border-bottom: 1px solid rgb(56, 68, 77);
-  width:         100%;
-  padding:       5px;
+  border-bottom:   1px solid rgb(56, 68, 77);
+  width:           100%;
+  padding:         5px;
+  display:         flex;
+  justify-content: space-between;
+}
+
+.todo-content {
+  /* float: left; */
 }
 
 .todo-card_head {
-  display: flex;
+  margin-top:  12px;
+  display:     flex;
   align-items: center;
 }
 
 .todo-card_title {
-  font-size: 16px;
+  font-size:   16px;
   font-weight: bold;
 }
 
 .todo-card_body {
   font-size: 12px;
+  margin:    12px 0px;
 }
 
 .todo-card_state {
   font-size: 10px;
-  margin-left: 8px;
+  margin-left: 12px;
   padding: 4px 8px;
   border-radius: 4px;
 }
@@ -88,6 +96,20 @@ body {
   background-color: silver;
 }
 
+.todo-buttons {
+  display:     flex;
+  align-items: flex-end;
+}
+
+.todo-buttons_edit {
+  margin-right: 8px;
+}
+
+.todo-buttons_remove {
+  
+}
+
 .todo-card .category {
 
 }
+

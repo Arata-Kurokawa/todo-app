@@ -7,17 +7,17 @@
 @import helper._
 
 @import forms.TodoEditData
-@import helpers.TodoFormHelper
+@import presenters.TodoFormPresenter
 
-@(vv: model.ViewValueCommon, form: Form[TodoEditData], fromHelper: TodoFormHelper, todoId: Long)(implicit request: RequestHeader, messages: Messages)
+@(vv: model.ViewValueCommon, form: Form[TodoEditData], formPresenter: TodoFormPresenter, todoId: Long)(implicit request: RequestHeader, messages: Messages)
 
 @common.Default(vv){
   @helper.form(action = routes.TodoController.update(todoId)) {
     @CSRF.formField 
     @helper.inputText(form("title"))
     @helper.inputText(form("body"))
-    @helper.select(form("state"), options = fromHelper.stateOptions)
-    @helper.select(form("categoryId"), options = fromHelper.categoryOptions)
+    @helper.select(form("state"), options = formPresenter.stateOptions)
+    @helper.select(form("categoryId"), options = formPresenter.categoryOptions)
     <input type="submit" value="更新">
     <a href="@routes.TodoController.index">戻る</a>
   }

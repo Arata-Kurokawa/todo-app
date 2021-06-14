@@ -30,4 +30,9 @@ object TodoModel {
     val newTodo = todo.v.copy(title = title, body = body, state = Todo.Status(state), categoryId = categoryId)
     repository.update(new Todo.EmbeddedId(newTodo))
   }
+
+  def remove(id: Long): Future[Option[EmbeddedId]] = {
+    val repository = onMySQL.TodoRepository
+    repository.remove(Id(id))
+  }
 }

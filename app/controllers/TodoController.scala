@@ -6,6 +6,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 import play.api.i18n.I18nSupport
+import play.api.libs.json._
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,22 +24,26 @@ import model.TodoCategoryModel
 import forms.TodoForm
 import forms.TodoEditData
 
-import helpers.TodoFormHelper
+import presenters.TodoFormPresenter
 
 class TodoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
   def index() = Action { implicit req =>
-    val todoListResult = Await.ready(TodoModel.all, Duration.Inf)
-    val todoList = todoListResult.value.get match {
-      case Success(list) => list
-      case Failure(e) => throw e
-    }
-
     val vv = ViewValueHome(
       title  = "Todo一覧",
       cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
-    Ok(views.html.todo.Index(vv, todoList))
+
+    val f = for {
+      todoList <- TodoModel.all
+    } yield {
+      Ok(views.html.todo.Index(vv, todoList))
+    }
+
+    Await.ready(f, Duration.Inf).value.get match {
+      case Success(ok) => ok
+      case Failure(e) => throw e
+    }
   }
 
   def add() = Action { implicit req =>
@@ -48,13 +53,17 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       jsSrc  = Seq("main.js")
     )
 
-    val form = TodoForm.add
-    val helper = Await.ready(getFormHelper, Duration.Inf).value.get match {
-      case Success(helper) => helper
-      case Failure(e) => throw e
+    val f = for {
+      presenter <- getFormPresenter
+    } yield {
+      val form = TodoForm.add
+      Ok(views.html.todo.Add(vv, form, presenter))
     }
 
-    Ok(views.html.todo.Add(vv, form, helper))
+    Await.ready(f, Duration.Inf).value.get match {
+      case Success(ok) => ok
+      case Failure(e) => throw e
+    }
   }
 
   def create() = Action { implicit req =>
@@ -68,23 +77,30 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
           jsSrc  = Seq("main.js")
         )
 
-        val helper = Await.ready(getFormHelper, Duration.Inf).value.get match {
-          case Success(helper) => helper
-          case Failure(e) => throw e
+        val f = for {
+          presenter <- getFormPresenter
+        } yield {
+          // binding failure, you retrieve the form containing errors:
+          BadRequest(views.html.todo.Add(vv, formWithErrors, presenter))
         }
 
-        // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.todo.Add(vv, formWithErrors, helper))
-      },
-      todoData => {
-        /* binding success, you get the actual value. */
-        val createResult = Await.ready(TodoModel.create(todoData.title, todoData.body, todoData.categoryId), Duration.Inf)
-        val id = createResult.value.get match {
-          case Success(id) => id
+        Await.ready(f, Duration.Inf).value.get match {
+          case Success(badReq) => badReq
           case Failure(e) => throw e
         }
-      
-        Redirect(routes.TodoController.show(id))
+      },
+      todoData => {
+        var f = for {
+          id <- TodoModel.create(todoData.title, todoData.body, todoData.categoryId)
+        } yield {
+          /* binding success, you get the actual value. */
+          Redirect(routes.TodoController.show(id))
+        }
+
+        Await.ready(f, Duration.Inf).value.get match {
+          case Success(redirect) => redirect
+          case Failure(e) => throw e
+        }
       }
     )
   }
@@ -96,18 +112,18 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       jsSrc  = Seq("main.js")
     )
 
-    val todo = Await.ready(getTodo(id), Duration.Inf).value.get match {
-      case Success(t) => t
-      case Failure(e) => throw e
+    val f = for {
+      todo      <- getTodo(id)
+      presenter <- getFormPresenter
+    } yield {
+      val form = TodoForm.edit.fill(TodoEditData(todo.v.title, todo.v.body, todo.v.state.code, todo.v.categoryId))
+      Ok(views.html.todo.Edit(vv, form, presenter, id))
     }
 
-    val form = TodoForm.edit.fill(TodoEditData(todo.v.title, todo.v.body, todo.v.state.code, todo.v.categoryId))
-    val helper = Await.ready(getFormHelper, Duration.Inf).value.get match {
-      case Success(helper) => helper
+    Await.ready(f, Duration.Inf).value.get match {
+      case Success(ok) => ok
       case Failure(e) => throw e
     }
-
-    Ok(views.html.todo.Edit(vv, form, helper, id))
   }
 
   def update(id: Long) = Action { implicit req => 
@@ -116,31 +132,35 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
     form.bindFromRequest.fold(
       formWithErrors => {
         val vv = ViewValueHome(
-          title  = "Todo追加",
+          title  = "Todo編集",
           cssSrc = Seq("reset.css", "main.css"),
           jsSrc  = Seq("main.js")
         )
 
-        val helper = Await.ready(getFormHelper, Duration.Inf).value.get match {
-          case Success(helper) => helper
-          case Failure(e) => throw e
+        val f = for {
+          presenter <- getFormPresenter
+        } yield {
+          // binding failure, you retrieve the form containing errors:
+          BadRequest(views.html.todo.Edit(vv, formWithErrors, presenter, id))
         }
 
-        // binding failure, you retrieve the form containing errors:
-        BadRequest(views.html.todo.Edit(vv, formWithErrors, helper, id))
+        Await.ready(f, Duration.Inf).value.get match {
+          case Success(badReq) => badReq
+          case Failure(e) => throw e
+        }
       },
       todoData => {
-        Await.ready(
-          for {
-            todo <- getTodo(id)
-            _    <- TodoModel.update(todo, todoData.title, todoData.body, todoData.state.toShort, todoData.categoryId)
-          } yield {
+        val f = for {
+          todo <- getTodo(id)
+          _    <- TodoModel.update(todo, todoData.title, todoData.body, todoData.state.toShort, todoData.categoryId)
+        } yield {
+          Redirect(routes.TodoController.show(id))
+        }
 
-          }
-          ,Duration.Inf
-        )
-      
-        Redirect(routes.TodoController.show(id))
+        Await.ready(f, Duration.Inf).value.get match {
+          case Success(redirect) => redirect
+          case Failure(e) => throw e
+        }
       }
     )
   }
@@ -152,12 +172,29 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       jsSrc  = Seq("main.js")
     )
 
-    val todo = Await.ready(getTodo(id), Duration.Inf).value.get match {
-      case Success(t) => t
-      case Failure(e) => throw e
+    val f = for {
+      todo <- getTodo(id)
+    } yield {
+      Ok(views.html.todo.Show(vv, todo))
     }
 
-    Ok(views.html.todo.Show(vv, todo))
+    Await.ready(f, Duration.Inf).value.get match {
+      case Success(ok) => ok
+      case Failure(e) => throw e
+    }
+  }
+
+  def remove(id: Long) = Action { implicit req =>
+    val f = for {
+      _ <- TodoModel.remove(id)
+    } yield {
+      Redirect(routes.TodoController.index)
+    }
+
+    Await.ready(f, Duration.Inf).value.get match {
+      case Success(redirect) => redirect
+      case Failure(e) => throw e
+    }
   }
 
   private def getTodo(id: Long): Future[Todo.EmbeddedId] = {
@@ -169,11 +206,11 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
     )
   }
 
-  private def getFormHelper(): Future[TodoFormHelper] = {
+  private def getFormPresenter(): Future[TodoFormPresenter] = {
     for {
       todoCategories <- TodoCategoryModel.all
     } yield {
-      new TodoFormHelper(todoCategories)
+      new TodoFormPresenter(todoCategories)
     }
   }
 }

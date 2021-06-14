@@ -1,9 +1,9 @@
-package helpers
+package presenters
 
 import lib.model.Todo
 import lib.model.TodoCategory
 
-class TodoFormHelper(val categories: Seq[TodoCategory.EmbeddedId]) {
+class TodoFormPresenter(val categories: Seq[TodoCategory.EmbeddedId]) {
   def categoryOptions(): Seq[(String, String)] = {
     categories.map(category => (category.id.toString, category.v.name))
   }

@@ -4,7 +4,8 @@
  *
  *@
 
-@(vv: model.ViewValueCommon, list: Seq[lib.model.Todo.EmbeddedId])
+@import helper._
+@(vv: model.ViewValueCommon, list: Seq[lib.model.Todo.EmbeddedId])(implicit request: RequestHeader, messages: Messages)
 
 @common.Default(vv){
   <a href="@routes.TodoController.add">TODO作成</a>
@@ -12,12 +13,25 @@
   @for(todo <- list) {
     <li>
       <div class="todo-card">
-        <div class="todo-card_head">
-          <p class="todo-card_title">@todo.v.title</p>
-          <p class="todo-card_state">@todo.v.state.name</p>
+        <div class="todo-content">
+          <div class="todo-card_head">
+            <div class="todo-card_title">@todo.v.title</div>
+            <div class="todo-card_state">@todo.v.state.name</div>
+          </div>
+          <p class="todo-card_body">@todo.v.body</p>
         </div>
-        <p class="todo-card_body">@todo.v.body</p>
-      </div>  
+        <div class="todo-buttons">
+          <button class="todo-buttons_edit">
+            <a href="@routes.TodoController.edit(todo.id)">編集</a>
+          </button>
+          <div class="todo-buttons_remove">
+            @helper.form(action = routes.TodoController.remove(todo.id)) {
+              @CSRF.formField
+              <input type="submit" value="削除">
+            }
+          </div>
+        </div>
+      </div>
     </li>
   }
   </ul>
