@@ -5,27 +5,37 @@
  *@
 
 @import helper._
-@(vv: model.ViewValueCommon, list: Seq[lib.model.Todo.EmbeddedId])(implicit request: RequestHeader, messages: Messages)
+
+@import helpers.TodoHelper
+@import presenters.TodoListPresenter
+
+@(vv: model.ViewValueCommon, presenter: TodoListPresenter, flash: String)(implicit request: RequestHeader, messages: Messages)
 
 @common.Default(vv){
-  <a href="@routes.TodoController.add">TODO作成</a>
+  @if(!flash.isEmpty) {
+    <div>@flash</div>
+  }
+  <button>
+    <a href="@routes.TodoController.add">作成</a>
+  </button>
   <ul class="todo-list">
-  @for(todo <- list) {
+  @for(item <- presenter.list) {
     <li>
       <div class="todo-card">
         <div class="todo-content">
           <div class="todo-card_head">
-            <div class="todo-card_title">@todo.v.title</div>
-            <div class="todo-card_state">@todo.v.state.name</div>
+            <div class="todo-card_title">@item.title</div>
+            <div class="todo-card_category">@item.categoryName</div>
+            <div class="todo-card_state @TodoHelper.stateStyle(item.state)">@item.state.name</div>
           </div>
-          <p class="todo-card_body">@todo.v.body</p>
+          <p class="todo-card_body">@item.body</p>
         </div>
         <div class="todo-buttons">
           <button class="todo-buttons_edit">
-            <a href="@routes.TodoController.edit(todo.id)">編集</a>
+            <a href="@routes.TodoController.edit(item.id)">編集</a>
           </button>
           <div class="todo-buttons_remove">
-            @helper.form(action = routes.TodoController.remove(todo.id)) {
+            @helper.form(action = routes.TodoController.remove(item.id)) {
               @CSRF.formField
               <input type="submit" value="削除">
             }

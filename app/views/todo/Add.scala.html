@@ -15,9 +15,9 @@
   @helper.form(action = routes.TodoController.create) {
     @CSRF.formField 
     @helper.inputText(form("title"))
-    @helper.inputText(form("body"))
+    @helper.textarea(form("body"))
     @helper.select(form("categoryId"), options = formPresenter.categoryOptions)
     <input type="submit" value="作成">
-    <a href="@routes.TodoController.index">戻る</a>
+    <button><a href="@routes.TodoController.index">戻る</a></button>
   }
 }

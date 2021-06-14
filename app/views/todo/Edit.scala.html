@@ -15,7 +15,7 @@
   @helper.form(action = routes.TodoController.update(todoId)) {
     @CSRF.formField 
     @helper.inputText(form("title"))
-    @helper.inputText(form("body"))
+    @helper.textarea(form("body"))
     @helper.select(form("state"), options = formPresenter.stateOptions)
     @helper.select(form("categoryId"), options = formPresenter.categoryOptions)
     <input type="submit" value="更新">

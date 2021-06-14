@@ -46,7 +46,7 @@ body {
 
 
 .todo-list {
-
+  padding: 0px;
 }
 
 .todo-card {
@@ -58,7 +58,6 @@ body {
 }
 
 .todo-content {
-  /* float: left; */
 }
 
 .todo-card_head {
@@ -77,6 +76,12 @@ body {
   margin:    12px 0px;
 }
 
+.todo-card_category {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+}
+
 .todo-card_state {
   font-size: 10px;
   margin-left: 12px;
@@ -84,15 +89,15 @@ body {
   border-radius: 4px;
 }
 
-.todo-card_state__wating {
+.todo_state__wating {
   background-color: pink;
 }
 
-.todo-card_state__inprogress {
+.todo_state__inprogress {
   background-color: yellowgreen;
 }
 
-.todo-card_state__completed {
+.todo_state__completed {
   background-color: silver;
 }
 
@@ -106,10 +111,38 @@ body {
 }
 
 .todo-buttons_remove {
-  
 }
 
-.todo-card .category {
+.todo-detail {
 
+}
+
+.todo-detail_head {
+  margin-top:  12px;
+  display:     flex;
+  align-items: center;
+}
+
+.todo-detail_title {
+  font-size:   16px;
+  font-weight: bold;
+}
+
+.todo-detail_body {
+  font-size: 12px;
+  margin:    20px 0px;
+}
+
+.todo-detail_category {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+}
+
+.todo-detail_state {
+  font-size: 10px;
+  margin-left: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 

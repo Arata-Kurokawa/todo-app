@@ -4,9 +4,16 @@
  *
  *@
 
-@(vv: model.ViewValueCommon, todo: lib.model.Todo.EmbeddedId)
+@import presenters.TodoPresenter
+@import helpers.TodoHelper
+
+@(vv: model.ViewValueCommon, presenter: TodoPresenter)
 @common.Default(vv){
-   <p>@todo.v.title</p>
-   <p>@todo.v.body</p>
-   <p>@todo.v.categoryId</p>
+   <div class="todo-detail_head">
+      <div class="todo-detail_title">@presenter.item.title</div>
+      <div class="todo-detail_category">@presenter.item.categoryName</div>
+      <div class="todo-detail_state @TodoHelper.stateStyle(presenter.item.state)">@presenter.item.state.name</div>
+   </div>
+   <div class="todo-detail_body">@presenter.item.body</div>
+   <button><a href="@routes.TodoController.index">一覧に戻る</a></button>
 }

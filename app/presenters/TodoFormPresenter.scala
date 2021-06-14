@@ -5,7 +5,7 @@ import lib.model.TodoCategory
 
 class TodoFormPresenter(val categories: Seq[TodoCategory.EmbeddedId]) {
   def categoryOptions(): Seq[(String, String)] = {
-    categories.map(category => (category.id.toString, category.v.name))
+    ("", "----------") +:categories.map(category => (category.id.toString, category.v.name))
   }
 
   def stateOptions(): Seq[(String, String)] = {
