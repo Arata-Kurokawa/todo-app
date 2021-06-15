@@ -44,6 +44,7 @@ body {
   display: none;
 }
 
+/******* Todo *******/
 
 .todo-list {
   padding: 0px;
@@ -57,92 +58,96 @@ body {
   justify-content: space-between;
 }
 
-.todo-content {
+.todo-card__content {
 }
 
-.todo-card_head {
+.todo-card__head {
   margin-top:  12px;
   display:     flex;
   align-items: center;
 }
 
-.todo-card_title {
+.todo-card__title {
   font-size:   16px;
   font-weight: bold;
 }
 
-.todo-card_body {
+.todo-card__body {
   font-size: 12px;
   margin:    12px 0px;
 }
 
-.todo-card_category {
+.todo-card__category {
   font-size: 10px;
   margin-left: 12px;
   padding: 4px 8px;
 }
 
-.todo-card_state {
+.todo-card__state {
   font-size: 10px;
   margin-left: 12px;
   padding: 4px 8px;
   border-radius: 4px;
 }
 
-.todo_state__wating {
+.todo_state--wating {
   background-color: pink;
 }
 
-.todo_state__inprogress {
+.todo_state--inprogress {
   background-color: yellowgreen;
 }
 
-.todo_state__completed {
+.todo_state--completed {
   background-color: silver;
 }
 
-.todo-buttons {
+.todo-card__buttons {
   display:     flex;
   align-items: flex-end;
 }
 
-.todo-buttons_edit {
+.todo-card__buttons__edit {
   margin-right: 8px;
 }
 
-.todo-buttons_remove {
+.todo-card__buttons__remove {
 }
 
 .todo-detail {
 
 }
 
-.todo-detail_head {
+.todo-detail__head {
   margin-top:  12px;
   display:     flex;
   align-items: center;
 }
 
-.todo-detail_title {
+.todo-detail__title {
   font-size:   16px;
   font-weight: bold;
 }
 
-.todo-detail_body {
+.todo-detail__body {
   font-size: 12px;
   margin:    20px 0px;
 }
 
-.todo-detail_category {
+.todo-detail__category {
   font-size: 10px;
   margin-left: 12px;
   padding: 4px 8px;
 }
 
-.todo-detail_state {
+.todo-detail__state {
   font-size: 10px;
   margin-left: 12px;
   padding: 4px 8px;
   border-radius: 4px;
 }
 
+/******* Todo Category *******/
+.todo-list {
+  padding: 0px;
+}

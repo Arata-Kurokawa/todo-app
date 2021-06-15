@@ -23,19 +23,19 @@
   @for(item <- presenter.list) {
     <li>
       <div class="todo-card">
-        <div class="todo-content">
-          <div class="todo-card_head">
-            <div class="todo-card_title">@item.title</div>
-            <div class="todo-card_category">@item.categoryName</div>
-            <div class="todo-card_state @TodoHelper.stateStyle(item.state)">@item.state.name</div>
+        <div class="todo-card__content">
+          <div class="todo-card__head">
+            <div class="todo-card__title">@item.title</div>
+            <div class="todo-card__category">@item.categoryName</div>
+            <div class="todo-card__state @TodoHelper.stateStyle(item.state)">@item.state.name</div>
           </div>
-          <p class="todo-card_body">@item.body</p>
+          <p class="todo-card__body">@item.body</p>
         </div>
-        <div class="todo-buttons">
-          <button class="todo-buttons_edit">
+        <div class="todo-card__buttons">
+          <button class="todo-card__buttons__edit">
             <a href="@routes.TodoController.edit(item.id)">編集</a>
           </button>
-          <div class="todo-buttons_remove">
+          <div class="todo-card__buttons__remove">
             @helper.form(action = routes.TodoController.remove(item.id)) {
               @CSRF.formField
               <input type="submit" value="削除">
