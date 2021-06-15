@@ -6,7 +6,7 @@
 
 @import helper._
 
-@import helpers.TodoHelper
+@import presenters.TodoPresenter
 @import presenters.TodoListPresenter
 
 @(vv: model.ViewValueCommon, presenter: TodoListPresenter, flash: String)(implicit request: RequestHeader, messages: Messages)
@@ -26,7 +26,7 @@
           <div class="todo-card_head">
             <div class="todo-card_title">@item.title</div>
             <div class="todo-card_category">@item.categoryName</div>
-            <div class="todo-card_state @TodoHelper.stateStyle(item.state)">@item.state.name</div>
+            <div class="todo-card_state @item.stateStyle">@item.state.name</div>
           </div>
           <p class="todo-card_body">@item.body</p>
         </div>
