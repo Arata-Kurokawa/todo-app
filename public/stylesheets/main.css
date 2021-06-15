@@ -148,6 +148,35 @@ body {
 }
 
 /******* Todo Category *******/
-.todo-list {
+.todo-category-list {
   padding: 0px;
+}
+
+.todo-category-card {
+  border-bottom:   1px solid rgb(56, 68, 77);
+  width:           100%;
+  padding:         5px;
+  display:         flex;
+  justify-content: space-between;
+}
+
+.todo-category-card__content {
+
+}
+
+.todo-category-card__buttons {
+  display:     flex;
+  align-items: flex-end;
+}
+
+.todo-category-card__buttons__edit {
+  margin-right: 8px;
+}
+
+.todo-category-card__buttons__remove {
+}
+
+.todo-category-card__name {
+  font-size:   16px;
+  font-weight: bold;
 }
