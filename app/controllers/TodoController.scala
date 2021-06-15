@@ -118,7 +118,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
 
   def remove(id: Long) = Action.async { implicit req =>
     for {
-      todo <- TodoUseCase.remove(id)
+      todo <- TodoUseCase.remove(Todo.Id(id))
     } yield {
       todo match {
         case None => Redirect(routes.TodoController.index)
@@ -128,7 +128,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   private def getTodo(id: Long): Future[Todo.EmbeddedId] = {
-    TodoUseCase.get(id).map(
+    TodoUseCase.get(Todo.Id(id)).map(
       _ match {
         case Some(todo) => todo
         case _ => throw new Exception // TODO 404ページに遷移

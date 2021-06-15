@@ -9,9 +9,9 @@ import lib.model.Todo._
 import lib.model.TodoCategory
 
 object TodoUseCase {
-  def get(id: Long): Future[Option[EmbeddedId]] = {
+  def get(id: Id): Future[Option[EmbeddedId]] = {
     val repository = onMySQL.TodoRepository
-    repository.get(Id(id))
+    repository.get(id)
   }
 
   def all(): Future[Seq[EmbeddedId]] = {
@@ -31,8 +31,8 @@ object TodoUseCase {
     repository.update(new Todo.EmbeddedId(newTodo))
   }
 
-  def remove(id: Long): Future[Option[EmbeddedId]] = {
+  def remove(id: Id): Future[Option[EmbeddedId]] = {
     val repository = onMySQL.TodoRepository
-    repository.remove(Id(id))
+    repository.remove(id)
   }
 }
