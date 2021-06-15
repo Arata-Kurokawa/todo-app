@@ -7,13 +7,13 @@
 @import presenters.TodoPresenter
 @import helpers.TodoHelper
 
-@(vv: model.ViewValueCommon, presenter: TodoPresenter)
-@common.Default(vv){
-   <div class="todo-detail_head">
-      <div class="todo-detail_title">@presenter.item.title</div>
-      <div class="todo-detail_category">@presenter.item.categoryName</div>
-      <div class="todo-detail_state @TodoHelper.stateStyle(presenter.item.state)">item.state.name</div>
+@(vv: model.ViewValueTodoDetail)
+@common.Default(vv.home){
+   <div class="todo-detail__head">
+      <div class="todo-detail__title">@vv.todo.title</div>
+      <div class="todo-detail__category">@vv.todo.categoryName</div>
+      <div class="todo-detail__state @TodoHelper.stateStyle(vv.todo.state)">@vv.todo.state.name</div>
    </div>
-   <div class="todo-detail_body">@presenter.item.body</div>
+   <div class="todo-detail__body">@vv.todo.body</div>
    <button><a href="@routes.TodoController.index">一覧に戻る</a></button>
 }

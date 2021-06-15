@@ -21,6 +21,6 @@ object TodoHelper {
   }
 
   def categoryOptions(categories: Seq[TodoCategory.EmbeddedId]): Seq[(String, String)] = {
-    ("", "----------") +:categories.map(category => (category.id.toString, category.v.name))
+    ("", "----------") +: categories.map(category => (category.id.toString, category.v.name))
   }
 }

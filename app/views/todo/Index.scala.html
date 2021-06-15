@@ -6,21 +6,17 @@
 
 @import helper._
 
-@import presenters.TodoPresenter
-@import presenters.TodoListPresenter
+@import model.ViewValueTodoList
 @import helpers.TodoHelper
 
-@(vv: model.ViewValueCommon, presenter: TodoListPresenter, flash: String)(implicit request: RequestHeader, messages: Messages)
+@(vv: ViewValueTodoList)(implicit request: RequestHeader, messages: Messages)
 
-@common.Default(vv){
-  @if(!flash.isEmpty) {
-    <div>@flash</div>
-  }
+@common.Default(vv.home){
   <button>
     <a href="@routes.TodoController.add">作成</a>
   </button>
   <ul class="todo-list">
-  @for(item <- presenter.list) {
+  @for(item <- vv.items) {
     <li>
       <div class="todo-card">
         <div class="todo-card__content">

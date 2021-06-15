@@ -12,11 +12,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import lib.model.TodoCategory
 
-import model.ViewValueHome
-import model.TodoCategoryModel
-
 import forms.TodoCategoryForm
 import forms.TodoCategoryData
+
+import model.ViewValueHome
+import useCase.TodoCategoryUseCase
 
 import presenters.TodoCategoryListPresenter
 
@@ -29,7 +29,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
     )
 
     for {
-      categories <- TodoCategoryModel.all
+      categories <- TodoCategoryUseCase.all
     } yield {
       val presenter = new TodoCategoryListPresenter(categories)
       Ok(views.html.todoCategory.Index(vv, presenter))
@@ -65,7 +65,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       },
       todoCategoryData => {
         for {
-          id <- TodoCategoryModel.create(todoCategoryData.name, todoCategoryData.slug)
+          id <- TodoCategoryUseCase.create(todoCategoryData.name, todoCategoryData.slug)
         } yield {
           /* binding success, you get the actual value. */
           Redirect(routes.TodoCategoryController.index)
@@ -107,7 +107,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       todoCategoryData => {
         for {
           category <- getTodoCategory(id)
-          id       <- TodoCategoryModel.update(category, todoCategoryData.name, todoCategoryData.slug)
+          id       <- TodoCategoryUseCase.update(category, todoCategoryData.name, todoCategoryData.slug)
         } yield {
           /* binding success, you get the actual value. */
           Redirect(routes.TodoCategoryController.index)
@@ -121,7 +121,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
   }
 
   private def getTodoCategory(id: Long): Future[TodoCategory.EmbeddedId] = {
-    TodoCategoryModel.get(id).map(
+    TodoCategoryUseCase.get(id).map(
       _ match {
         case Some(todoCategory) => todoCategory
         case _ => throw new Exception // TODO 404ページに遷移

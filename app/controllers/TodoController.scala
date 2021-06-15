@@ -12,47 +12,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import lib.model.Todo
 
-import model.ViewValueHome
-import model.TodoModel
-import model.TodoCategoryModel
-
 import forms.TodoForm
 import forms.TodoEditData
 
-import presenters.TodoListPresenter
-import presenters.TodoPresenter
-import presenters.TodoFormPresenter
+import model.ViewValueHome
+import model.factory.ViewValueTodoListFactory
+import model.factory.ViewValueTodoFormFactory
+import model.factory.ViewValueTodoDetailFactory
+
+import useCase.TodoUseCase
+import useCase.TodoCategoryUseCase
 
 class TodoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
   def index() = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo一覧",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
-      todoList <- TodoModel.all
-      categories <- TodoCategoryModel.all
+      todoList <- TodoUseCase.all
+      categories <- TodoCategoryUseCase.all
     } yield {
-      val presenter = new TodoListPresenter(todoList, categories)
-      val flash = req.flash.get("success").getOrElse("")
-      Ok(views.html.todo.Index(vv, presenter, flash))
+      val vv = ViewValueTodoListFactory.create(todoList, categories)
+      Ok(views.html.todo.Index(vv))
     }
   }
 
   def add() = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo追加",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
-      presenter <- getFormPresenter
+      categories <- TodoCategoryUseCase.all
     } yield {
       val form = TodoForm.add
-      Ok(views.html.todo.Add(vv, form, presenter))
+      val vv = ViewValueTodoFormFactory.createAdd(categories)
+      Ok(views.html.todo.Add(vv, form))
     }
   }
 
@@ -61,22 +49,19 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
 
     form.bindFromRequest.fold(
       formWithErrors => {
-        val vv = ViewValueHome(
-          title  = "Todo追加",
-          cssSrc = Seq("reset.css", "main.css"),
-          jsSrc  = Seq("main.js")
-        )
-
         for {
-          presenter <- getFormPresenter
+          categories <- TodoCategoryUseCase.all
         } yield {
+          val form = TodoForm.add
+          val vv = ViewValueTodoFormFactory.createAdd(categories)
+
           // binding failure, you retrieve the form containing errors:
-          BadRequest(views.html.todo.Add(vv, formWithErrors, presenter))
+          BadRequest(views.html.todo.Add(vv, formWithErrors))
         }
       },
       todoData => {
         for {
-          id <- TodoModel.create(todoData.title, todoData.body, todoData.categoryId)
+          id <- TodoUseCase.create(todoData.title, todoData.body, todoData.categoryId)
         } yield {
           /* binding success, you get the actual value. */
           Redirect(routes.TodoController.show(id))
@@ -86,18 +71,13 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def edit(id: Long) = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo編集",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
-      todo      <- getTodo(id)
-      presenter <- getFormPresenter
+      todo       <- getTodo(id)
+      categories <- TodoCategoryUseCase.all
     } yield {
+      val vv = ViewValueTodoFormFactory.createEdit(todo.id, categories)
       val form = TodoForm.edit.fill(TodoEditData(todo.v.title, todo.v.body, todo.v.state.code, todo.v.categoryId))
-      Ok(views.html.todo.Edit(vv, form, presenter, id))
+      Ok(views.html.todo.Edit(vv, form))
     }
   }
 
@@ -106,23 +86,19 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
 
     form.bindFromRequest.fold(
       formWithErrors => {
-        val vv = ViewValueHome(
-          title  = "Todo編集",
-          cssSrc = Seq("reset.css", "main.css"),
-          jsSrc  = Seq("main.js")
-        )
-
         for {
-          presenter <- getFormPresenter
+          todo       <- getTodo(id)
+          categories <- TodoCategoryUseCase.all
         } yield {
+          val vv = ViewValueTodoFormFactory.createEdit(todo.id, categories)
           // binding failure, you retrieve the form containing errors:
-          BadRequest(views.html.todo.Edit(vv, formWithErrors, presenter, id))
+          BadRequest(views.html.todo.Edit(vv, formWithErrors))
         }
       },
       todoData => {
         for {
           todo <- getTodo(id)
-          _    <- TodoModel.update(todo, todoData.title, todoData.body, todoData.state.toShort, todoData.categoryId)
+          _    <- TodoUseCase.update(todo, todoData.title, todoData.body, todoData.state.toShort, todoData.categoryId)
         } yield {
           Redirect(routes.TodoController.show(id))
         }
@@ -131,24 +107,18 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   def show(id: Long) = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo詳細",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
       todo <- getTodo(id)
-      category <- TodoCategoryModel.get(todo.v.categoryId)
+      category <- TodoCategoryUseCase.get(todo.v.categoryId)
     } yield {
-      val presenter = new TodoPresenter(todo, category)
-      Ok(views.html.todo.Show(vv, presenter))
+      val vv = ViewValueTodoDetailFactory.create(todo, category)
+      Ok(views.html.todo.Show(vv))
     }
   }
 
   def remove(id: Long) = Action.async { implicit req =>
     for {
-      todo <- TodoModel.remove(id)
+      todo <- TodoUseCase.remove(id)
     } yield {
       todo match {
         case None => Redirect(routes.TodoController.index)
@@ -158,19 +128,11 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
   }
 
   private def getTodo(id: Long): Future[Todo.EmbeddedId] = {
-    TodoModel.get(id).map(
+    TodoUseCase.get(id).map(
       _ match {
         case Some(todo) => todo
         case _ => throw new Exception // TODO 404ページに遷移
       }
     )
-  }
-
-  private def getFormPresenter(): Future[TodoFormPresenter] = {
-    for {
-      todoCategories <- TodoCategoryModel.all
-    } yield {
-      new TodoFormPresenter(todoCategories)
-    }
   }
 }

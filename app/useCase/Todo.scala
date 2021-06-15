@@ -1,16 +1,14 @@
-package model
+
+package useCase
 
 import scala.concurrent.Future
-import scala.concurrent.duration.Duration
 
 import lib.persistence.onMySQL
-
 import lib.model.Todo
 import lib.model.Todo._
-
 import lib.model.TodoCategory
 
-object TodoModel {
+object TodoUseCase {
   def get(id: Long): Future[Option[EmbeddedId]] = {
     val repository = onMySQL.TodoRepository
     repository.get(Id(id))
