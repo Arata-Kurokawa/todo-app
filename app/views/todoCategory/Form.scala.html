@@ -1,0 +1,26 @@
+@import helper._
+@import forms.TodoCategoryData
+
+@(form: Form[TodoCategoryData], categoryId: Option[Long])(implicit request: RequestHeader, messages: Messages)
+
+@action(id: Option[Long]) = @{
+  id match {
+    case Some(num) => routes.TodoCategoryController.update(num)
+    case _         => routes.TodoCategoryController.create
+  }
+}
+
+@submitButtonName(id: Option[Long]) = @{
+  id match {
+    case None => "作成"
+    case _    => "更新"
+  }
+}
+
+@helper.form(action = action(categoryId)) {
+  @CSRF.formField 
+  @helper.inputText(form("name"))
+  @helper.inputText(form("slug"))
+  <input type="submit" value="@submitButtonName(categoryId)">
+  <button><a href="@routes.TodoCategoryController.index">戻る</a></button>
+}

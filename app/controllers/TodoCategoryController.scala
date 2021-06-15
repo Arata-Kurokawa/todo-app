@@ -10,8 +10,13 @@ import play.api.i18n.I18nSupport
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import lib.model.TodoCategory
+
 import model.ViewValueHome
 import model.TodoCategoryModel
+
+import forms.TodoCategoryForm
+import forms.TodoCategoryData
 
 import presenters.TodoCategoryListPresenter
 
@@ -38,20 +43,89 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       jsSrc  = Seq("main.js")
     )
 
-    Ok(views.html.todoCategory.Add(vv))
+    val form = TodoCategoryForm()
+
+    Ok(views.html.todoCategory.Add(vv, form))
   }
 
-  def edit(id: Long) = Action { implicit req =>
+  def create() = Action.async { implicit req =>
+    val form = TodoCategoryForm()
+
+    form.bindFromRequest.fold(
+      formWithErrors => {
+        val vv = ViewValueHome(
+          title  = "Todo追加",
+          cssSrc = Seq("reset.css", "main.css"),
+          jsSrc  = Seq("main.js")
+        )
+
+        Future {
+          BadRequest(views.html.todoCategory.Add(vv, formWithErrors))
+        } 
+      },
+      todoCategoryData => {
+        for {
+          id <- TodoCategoryModel.create(todoCategoryData.name, todoCategoryData.slug)
+        } yield {
+          /* binding success, you get the actual value. */
+          Redirect(routes.TodoCategoryController.index)
+        }
+      }
+    )
+  }
+
+  def edit(id: Long) = Action.async { implicit req =>
     val vv = ViewValueHome(
       title  = "Todoカテゴリ編集",
       cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
 
-    Ok(views.html.todoCategory.Edit(vv))
+    for {
+      category <- getTodoCategory(id)
+    } yield {
+      val form = TodoCategoryForm().fill(TodoCategoryData(category.v.name, category.v.slug))
+      Ok(views.html.todoCategory.Edit(vv, form, id))
+    }    
+  }
+
+  def update(id: Long) = Action.async { implicit req =>
+    val form = TodoCategoryForm()
+
+    form.bindFromRequest.fold(
+      formWithErrors => {
+        val vv = ViewValueHome(
+          title  = "Todo編集",
+          cssSrc = Seq("reset.css", "main.css"),
+          jsSrc  = Seq("main.js")
+        )
+
+        Future {
+          BadRequest(views.html.todoCategory.Edit(vv, formWithErrors, id))
+        } 
+      },
+      todoCategoryData => {
+        for {
+          category <- getTodoCategory(id)
+          id       <- TodoCategoryModel.update(category, todoCategoryData.name, todoCategoryData.slug)
+        } yield {
+          /* binding success, you get the actual value. */
+          Redirect(routes.TodoCategoryController.index)
+        }
+      }
+    )
   }
 
   def remove(id: Long) = Action { implicit req =>
     Redirect(routes.TodoCategoryController.index)
+  }
+
+  private def getTodoCategory(id: Long): Future[TodoCategory.EmbeddedId] = {
+    TodoCategoryModel.get(id).map(
+      _ match {
+        case Some(todoCategory) => todoCategory
+        case _ => throw new Exception // TODO 404ページに遷移
+      }
+    )
   }
 }

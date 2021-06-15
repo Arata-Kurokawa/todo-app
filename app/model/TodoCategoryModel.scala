@@ -18,4 +18,16 @@ object TodoCategoryModel {
     val repository = onMySQL.TodoCategoryRepository
     repository.all()
   }
+
+  def create(name: String, slug: String): Future[Id] = {
+    val repository = onMySQL.TodoCategoryRepository
+    val entity = TodoCategory(name, slug, 1)
+    repository.add(entity)
+  }
+
+  def update(category: EmbeddedId, name: String, slug: String): Future[Option[EmbeddedId]] = {
+    val repository = onMySQL.TodoCategoryRepository
+    val newCategory = category.v.copy(name = name, slug = slug)
+    repository.update(new TodoCategory.EmbeddedId(newCategory))
+  }
 }

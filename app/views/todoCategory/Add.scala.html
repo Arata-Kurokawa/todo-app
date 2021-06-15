@@ -4,8 +4,12 @@
  *
  *@
 
-@(vv: model.ViewValueCommon)
+@import helper._
+
+@import forms.TodoCategoryData
+
+@(vv: model.ViewValueCommon, form: Form[TodoCategoryData])(implicit request: RequestHeader, messages: Messages)
 
 @common.Default(vv){
-  
+  @views.html.todoCategory.Form.render(form, None, request, messages)
 }
