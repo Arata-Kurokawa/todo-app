@@ -60,12 +60,6 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
   }
 
   def edit(id: Long) = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todoカテゴリ編集",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
       category <- getTodoCategory(id)
     } yield {
