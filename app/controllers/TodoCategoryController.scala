@@ -16,23 +16,17 @@ import forms.TodoCategoryForm
 import forms.TodoCategoryData
 
 import model.ViewValueHome
-import useCase.TodoCategoryUseCase
+import model.ViewValueTodoCategoryListFactory
 
-import presenters.TodoCategoryListPresenter
+import useCase.TodoCategoryUseCase
 
 class TodoCategoryController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
   def index() = Action.async { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todoカテゴリ一覧",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     for {
       categories <- TodoCategoryUseCase.all
     } yield {
-      val presenter = new TodoCategoryListPresenter(categories)
-      Ok(views.html.todoCategory.Index(vv, presenter))
+      val vv = ViewValueTodoCategoryListFactory.create(categories)
+      Ok(views.html.todoCategory.Index(vv))
     }
   }
 

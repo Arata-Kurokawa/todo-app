@@ -15,10 +15,9 @@ import lib.model.Todo
 import forms.TodoForm
 import forms.TodoEditData
 
-import model.ViewValueHome
-import model.factory.ViewValueTodoListFactory
-import model.factory.ViewValueTodoFormFactory
-import model.factory.ViewValueTodoDetailFactory
+import model.ViewValueTodoListFactory
+import model.ViewValueTodoFormFactory
+import model.ViewValueTodoDetailFactory
 
 import useCase.TodoUseCase
 import useCase.TodoCategoryUseCase
