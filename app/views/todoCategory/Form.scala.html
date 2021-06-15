@@ -1,5 +1,6 @@
 @import helper._
 @import forms.TodoCategoryData
+@import helpers.TodoCategoryHelper
 
 @(form: Form[TodoCategoryData], categoryId: Option[Long])(implicit request: RequestHeader, messages: Messages)
 
@@ -21,6 +22,7 @@
   @CSRF.formField 
   @helper.inputText(form("name"))
   @helper.inputText(form("slug"))
+  @helper.select(form("color"), options = TodoCategoryHelper.colorOptions())
   <input type="submit" value="@submitButtonName(categoryId)">
   <button><a href="@routes.TodoCategoryController.index">戻る</a></button>
 }

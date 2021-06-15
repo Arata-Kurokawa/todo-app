@@ -26,9 +26,9 @@ object TodoCategoryUseCase {
     repository.add(entity)
   }
 
-  def update(category: EmbeddedId, name: String, slug: String): Future[Option[EmbeddedId]] = {
+  def update(category: EmbeddedId, name: String, slug: String, color: Color): Future[Option[EmbeddedId]] = {
     val repository = onMySQL.TodoCategoryRepository
-    val newCategory = category.v.copy(name = name, slug = slug)
+    val newCategory = category.v.copy(name = name, slug = slug, color = color)
     repository.update(new TodoCategory.EmbeddedId(newCategory))
   }
 }

@@ -78,7 +78,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
     for {
       category <- getTodoCategory(id)
     } yield {
-      val form = TodoCategoryForm().fill(TodoCategoryData(category.v.name, category.v.slug))
+      val form = TodoCategoryForm().fill(TodoCategoryData(category.v.name, category.v.slug, category.v.color.code))
       Ok(views.html.todoCategory.Edit(vv, form, id))
     }    
   }
@@ -101,7 +101,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       todoCategoryData => {
         for {
           category <- getTodoCategory(id)
-          id       <- TodoCategoryUseCase.update(category, todoCategoryData.name, todoCategoryData.slug)
+          id       <- TodoCategoryUseCase.update(category, todoCategoryData.name, todoCategoryData.slug, TodoCategory.Color(todoCategoryData.color.toShort))
         } yield {
           /* binding success, you get the actual value. */
           Redirect(routes.TodoCategoryController.index)
