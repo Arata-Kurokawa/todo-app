@@ -5,13 +5,14 @@
  *@
 
 @import presenters.TodoPresenter
+@import helpers.TodoHelper
 
 @(vv: model.ViewValueCommon, presenter: TodoPresenter)
 @common.Default(vv){
    <div class="todo-detail_head">
       <div class="todo-detail_title">@presenter.item.title</div>
       <div class="todo-detail_category">@presenter.item.categoryName</div>
-      <div class="todo-detail_state @presenter.stateStyle">@presenter.item.state.name</div>
+      <div class="todo-detail_state @TodoHelper.stateStyle(presenter.item.state)">item.state.name</div>
    </div>
    <div class="todo-detail_body">@presenter.item.body</div>
    <button><a href="@routes.TodoController.index">一覧に戻る</a></button>

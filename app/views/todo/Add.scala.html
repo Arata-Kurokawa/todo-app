@@ -8,6 +8,7 @@
 
 @import forms.TodoAddData
 @import presenters.TodoFormPresenter
+@import helpers.TodoHelper
 
 @(vv: model.ViewValueCommon, form: Form[TodoAddData], formPresenter: TodoFormPresenter)(implicit request: RequestHeader, messages: Messages)
 
@@ -16,7 +17,7 @@
     @CSRF.formField 
     @helper.inputText(form("title"))
     @helper.textarea(form("body"))
-    @helper.select(form("categoryId"), options = formPresenter.categoryOptions)
+    @helper.select(form("categoryId"), options = TodoHelper.categoryOptions(formPresenter.categories))
     <input type="submit" value="作成">
     <button><a href="@routes.TodoController.index">戻る</a></button>
   }

@@ -3,14 +3,8 @@ package presenters
 import lib.model.Todo
 import lib.model.TodoCategory
 
-import helpers.TodoHelper
-
 class TodoListPresenter(val todoList: Seq[Todo.EmbeddedId], val categories: Seq[TodoCategory.EmbeddedId]) {
-  case class TodoItem(id: Long, title: String, body: String, state: Todo.Status, categoryName: String) {
-    def stateStyle(): String = {
-      TodoHelper.stateStyle(state)
-    }
-  }
+  case class TodoItem(id: Long, title: String, body: String, state: Todo.Status, categoryName: String)
 
   def list(): Seq[TodoItem] = {
     for {

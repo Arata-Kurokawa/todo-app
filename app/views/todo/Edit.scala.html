@@ -8,6 +8,7 @@
 
 @import forms.TodoEditData
 @import presenters.TodoFormPresenter
+@import helpers.TodoHelper
 
 @(vv: model.ViewValueCommon, form: Form[TodoEditData], formPresenter: TodoFormPresenter, todoId: Long)(implicit request: RequestHeader, messages: Messages)
 
@@ -16,8 +17,8 @@
     @CSRF.formField 
     @helper.inputText(form("title"))
     @helper.textarea(form("body"))
-    @helper.select(form("state"), options = formPresenter.stateOptions)
-    @helper.select(form("categoryId"), options = formPresenter.categoryOptions)
+    @helper.select(form("state"), options = TodoHelper.stateOptions)
+    @helper.select(form("categoryId"), options = TodoHelper.categoryOptions(formPresenter.categories))
     <input type="submit" value="更新">
     <a href="@routes.TodoController.index">戻る</a>
   }
