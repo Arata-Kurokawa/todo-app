@@ -7,8 +7,8 @@
 @import helper._
 @import forms.TodoCategoryData
 
-@(vv: model.ViewValueCommon, form: Form[TodoCategoryData], id: Long)(implicit request: RequestHeader, messages: Messages)
+@(vv: model.ViewValueTodoCategoryForm, form: Form[TodoCategoryData])(implicit request: RequestHeader, messages: Messages)
 
-@common.Default(vv){
-  @views.html.todoCategory.Form.render(form, Option(id), request, messages)
+@common.Default(vv.home){
+  @views.html.todoCategory.Form.render(form, vv, request, messages)
 }

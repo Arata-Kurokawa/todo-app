@@ -1,28 +1,26 @@
 @import helper._
 @import forms.TodoCategoryData
 @import helpers.TodoCategoryHelper
+@import model.ViewValueTodoCategoryForm
 
-@(form: Form[TodoCategoryData], categoryId: Option[Long])(implicit request: RequestHeader, messages: Messages)
+@(form: Form[TodoCategoryData], vv: ViewValueTodoCategoryForm)(implicit request: RequestHeader, messages: Messages)
 
-@action(id: Option[Long]) = @{
-  id match {
+@action(vv: ViewValueTodoCategoryForm) = @{
+  vv.id match {
     case Some(num) => routes.TodoCategoryController.update(num)
     case _         => routes.TodoCategoryController.create
   }
 }
 
-@submitButtonName(id: Option[Long]) = @{
-  id match {
-    case None => "作成"
-    case _    => "更新"
-  }
+@submitButtonName(vv: ViewValueTodoCategoryForm) = @{
+  if (vv.isNew) "作成" else "更新"
 }
 
-@helper.form(action = action(categoryId)) {
-  @CSRF.formField 
+@helper.form(action = action(vv)) {
+  @CSRF.formField
   @helper.inputText(form("name"))
   @helper.inputText(form("slug"))
   @helper.select(form("color"), options = TodoCategoryHelper.colorOptions())
-  <input type="submit" value="@submitButtonName(categoryId)">
+  <input type="submit" value="@submitButtonName(vv)">
   <button><a href="@routes.TodoCategoryController.index">戻る</a></button>
 }

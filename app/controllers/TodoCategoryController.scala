@@ -17,6 +17,7 @@ import forms.TodoCategoryData
 
 import model.ViewValueHome
 import model.ViewValueTodoCategoryListFactory
+import model.ViewValueTodoCategoryFormFactory
 
 import useCase.TodoCategoryUseCase
 
@@ -31,13 +32,8 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
   }
 
   def add() = Action { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todoカテゴリ作成",
-      cssSrc = Seq("reset.css", "main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     val form = TodoCategoryForm()
+    val vv   = ViewValueTodoCategoryFormFactory.createAdd()
 
     Ok(views.html.todoCategory.Add(vv, form))
   }
@@ -47,13 +43,8 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
 
     form.bindFromRequest.fold(
       formWithErrors => {
-        val vv = ViewValueHome(
-          title  = "Todo追加",
-          cssSrc = Seq("reset.css", "main.css"),
-          jsSrc  = Seq("main.js")
-        )
-
         Future {
+          val vv = ViewValueTodoCategoryFormFactory.createAdd()
           BadRequest(views.html.todoCategory.Add(vv, formWithErrors))
         } 
       },
@@ -79,7 +70,8 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       category <- getTodoCategory(id)
     } yield {
       val form = TodoCategoryForm().fill(TodoCategoryData(category.v.name, category.v.slug, category.v.color.code))
-      Ok(views.html.todoCategory.Edit(vv, form, id))
+      val vv = ViewValueTodoCategoryFormFactory.createEdit(category.id)
+      Ok(views.html.todoCategory.Edit(vv, form))
     }    
   }
 
@@ -88,15 +80,12 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
 
     form.bindFromRequest.fold(
       formWithErrors => {
-        val vv = ViewValueHome(
-          title  = "Todo編集",
-          cssSrc = Seq("reset.css", "main.css"),
-          jsSrc  = Seq("main.js")
-        )
-
-        Future {
-          BadRequest(views.html.todoCategory.Edit(vv, formWithErrors, id))
-        } 
+        for {
+          category <- getTodoCategory(id)
+        } yield {
+          val vv = ViewValueTodoCategoryFormFactory.createEdit(category.id)
+          BadRequest(views.html.todoCategory.Edit(vv, formWithErrors))
+        }
       },
       todoCategoryData => {
         for {
