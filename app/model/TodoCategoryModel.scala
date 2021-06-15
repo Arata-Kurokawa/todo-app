@@ -21,7 +21,7 @@ object TodoCategoryModel {
 
   def create(name: String, slug: String): Future[Id] = {
     val repository = onMySQL.TodoCategoryRepository
-    val entity = TodoCategory(name, slug, 1)
+    val entity = TodoCategory(name, slug, Color.RED)
     repository.add(entity)
   }
 
