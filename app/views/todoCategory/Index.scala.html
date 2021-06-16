@@ -18,10 +18,13 @@
     <li>
       <div class="todo-category-card">
         <div class="todo-category-card__content">
-          <p class="todo-category-card__name">
-            <span class="todo-category-card__color @TodoCategoryHelper.colorStyle(item.color)"></span>@item.name
-          </p>
-          <p class="todo-category-card__slug">@item.slug</p>
+          <span class="todo-category-card__color @TodoCategoryHelper.colorStyle(item.color)"></span>
+          <div>
+            <p class="todo-category-card__name">
+              @item.name
+            </p>
+            <p class="todo-category-card__slug">@item.slug</p>
+          </div>
         </div>
         <div class="todo-category-card__buttons">
           <button class="todo-category-card__buttons__edit">

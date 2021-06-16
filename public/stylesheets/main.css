@@ -195,6 +195,10 @@ body {
 .todo-category-card__buttons__remove {
 }
 
+.todo-category-card__content {
+  display: flex;
+}
+
 .todo-category-card__name {
   font-size:   16px;
   font-weight: bold;
@@ -202,7 +206,6 @@ body {
 
 .todo-category-card__slug {
   font-size:    14px;
-  padding-left: 24px;
 }
 
 .todo-category-card__color {
@@ -210,6 +213,7 @@ body {
   width: 16px;
   height: 16px;
   border-radius: 50%;/* ←円を作る */
+  margin-top: 4px;
   margin-right: 8px;
   vertical-align: middle;
 }
