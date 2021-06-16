@@ -18,8 +18,8 @@ object TodoCategoryUseCase {
     TodoCategoryRepository.all()
   }
 
-  def create(name: String, slug: String): Future[Id] = {
-    val entity = TodoCategory(name, slug, Color.RED)
+  def create(name: String, slug: String, color: Color): Future[Id] = {
+    val entity = TodoCategory(name, slug, color)
     TodoCategoryRepository.add(entity)
   }
 

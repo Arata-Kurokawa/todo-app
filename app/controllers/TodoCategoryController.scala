@@ -50,7 +50,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       },
       todoCategoryData => {
         for {
-          id <- TodoCategoryUseCase.create(todoCategoryData.name, todoCategoryData.slug)
+          id <- TodoCategoryUseCase.create(todoCategoryData.name, todoCategoryData.slug, TodoCategory.Color(todoCategoryData.color.toShort))
         } yield {
           /* binding success, you get the actual value. */
           Redirect(routes.TodoCategoryController.index)
