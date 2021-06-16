@@ -199,3 +199,33 @@ body {
   font-size:   16px;
   font-weight: bold;
 }
+
+.todo-category-card__slug {
+  font-size:    14px;
+  padding-left: 24px;
+}
+
+.todo-category-card__color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;/* ←円を作る */
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.todo-category__color--red {
+  background-color: red;
+}
+
+.todo-category__color--green {
+  background-color: green;
+}
+
+.todo-category__color--blue {
+  background-color: blue;
+}
+
+.todo-category__color--yellow {
+  background-color: yellow;
+}

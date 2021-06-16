@@ -6,6 +6,8 @@
  
 @import helper._
 
+@import helpers.TodoCategoryHelper
+
 @(vv: model.ViewValueTodoCategoryList)(implicit request: RequestHeader, messages: Messages)
 @common.Default(vv.home){
   <button>
@@ -16,7 +18,10 @@
     <li>
       <div class="todo-category-card">
         <div class="todo-category-card__content">
-          <div class="todo-category-card__name">@item.name</div>
+          <p class="todo-category-card__name">
+            <span class="todo-category-card__color @TodoCategoryHelper.colorStyle(item.color)"></span>@item.name
+          </p>
+          <p class="todo-category-card__slug">@item.slug</p>
         </div>
         <div class="todo-category-card__buttons">
           <button class="todo-category-card__buttons__edit">
