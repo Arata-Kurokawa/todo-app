@@ -97,7 +97,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       todoData => {
         for {
           todo <- getTodo(id)
-          _    <- TodoUseCase.update(todo, todoData.title, todoData.body, todoData.state.toShort, todoData.categoryId)
+          _    <- TodoUseCase.update(todo, todoData.title, todoData.body, Todo.Status(todoData.state.toShort), todoData.categoryId)
         } yield {
           Redirect(routes.TodoController.show(id))
         }

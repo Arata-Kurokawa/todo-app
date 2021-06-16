@@ -22,8 +22,8 @@ object TodoUseCase {
     TodoRepository.add(entity)
   }
 
-  def update(todo: EmbeddedId, title: String, body: String, state: Short, categoryId: Long): Future[Option[EmbeddedId]] = {
-    val newTodo = todo.v.copy(title = title, body = body, state = Todo.Status(state), categoryId = TodoCategory.Id(categoryId))
+  def update(todo: EmbeddedId, title: String, body: String, state: Status, categoryId: Long): Future[Option[EmbeddedId]] = {
+    val newTodo = todo.v.copy(title = title, body = body, state = state, categoryId = TodoCategory.Id(categoryId))
     TodoRepository.update(new Todo.EmbeddedId(newTodo))
   }
 
