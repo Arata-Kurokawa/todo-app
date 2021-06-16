@@ -27,4 +27,8 @@ object TodoCategoryUseCase {
     val newCategory = category.v.copy(name = name, slug = slug, color = color)
     TodoCategoryRepository.update(new TodoCategory.EmbeddedId(newCategory))
   }
+
+  def remove(id: Id): Future[Option[EmbeddedId]] = {
+    TodoCategoryRepository.remove(id)
+  }
 }

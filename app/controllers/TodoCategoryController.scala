@@ -93,8 +93,15 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
     )
   }
 
-  def remove(id: Long) = Action { implicit req =>
-    Redirect(routes.TodoCategoryController.index)
+  def remove(id: Long) = Action.async { implicit req =>
+    for {
+      todo <- TodoCategoryUseCase.remove(TodoCategory.Id(id))
+    } yield {
+      todo match {
+        case None => Redirect(routes.TodoCategoryController.index)
+        case _    => Redirect(routes.TodoCategoryController.index).flashing("success" -> "Todoを削除しました。")
+      }
+    }
   }
 
   private def getTodoCategory(id: Long): Future[TodoCategory.EmbeddedId] = {
