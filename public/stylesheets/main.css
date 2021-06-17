@@ -204,6 +204,12 @@ body {
   font-weight: bold;
 }
 
+.todo-card__category {
+  font-size:   12px;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
 .todo-category-card__slug {
   font-size:    14px;
 }
@@ -219,14 +225,17 @@ body {
 }
 
 .todo-category__color--red {
+  color: #FFF;
   background-color: red;
 }
 
 .todo-category__color--green {
+  color: #FFF;
   background-color: green;
 }
 
 .todo-category__color--blue {
+  color: #FFF;
   background-color: blue;
 }
 

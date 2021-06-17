@@ -8,6 +8,8 @@
 
 @import model.ViewValueTodoList
 @import helpers.TodoHelper
+@import helpers.TodoCategoryHelper
+@import play.twirl.api.StringInterpolation
 
 @(vv: ViewValueTodoList)(implicit request: RequestHeader, messages: Messages)
 
@@ -22,7 +24,16 @@
         <div class="todo-card__content">
           <div class="todo-card__head">
             <p class="todo-card__title">@item.title</p>
-            <p class="todo-card__category">@item.categoryName</p>
+            @{
+              item.category match {
+                case Some(category) => {
+                  val colorStyle = TodoCategoryHelper.colorStyle(category.color)
+                  val name = category.name
+                  html"<p class='todo-card__category $colorStyle'>$name</p>"
+                }
+                case _              => <p class="todo-card__category"></p>
+              }
+            }
             <p class="todo-card__state @TodoHelper.stateStyle(item.state)">@item.state.name</p>
           </div>
           <p class="todo-card__body">@item.body</p>
