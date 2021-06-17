@@ -11,7 +11,7 @@ object TodoCategoryForm {
     Form(
       mapping(
         "name"  -> nonEmptyText,
-        "slug"  -> nonEmptyText,
+        "slug"  -> nonEmptyText.verifying("Please enter alphanumeric characters.", field => field.matches("^[0-9a-zA-Z]+$")),
         "color" -> number
       )(TodoCategoryData.apply)(TodoCategoryData.unapply)
     )
