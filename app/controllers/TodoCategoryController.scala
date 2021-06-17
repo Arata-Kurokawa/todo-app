@@ -16,8 +16,8 @@ import forms.TodoCategoryForm
 import forms.TodoCategoryData
 
 import model.ViewValueHome
-import model.ViewValueTodoCategoryListFactory
-import model.ViewValueTodoCategoryFormFactory
+import model.ViewValueTodoCategoryList
+import model.ViewValueTodoCategoryForm
 
 import useCase.TodoCategoryUseCase
 
@@ -26,14 +26,14 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
     for {
       categories <- TodoCategoryUseCase.all
     } yield {
-      val vv = ViewValueTodoCategoryListFactory.create(categories)
+      val vv = ViewValueTodoCategoryList(categories)
       Ok(views.html.todoCategory.Index(vv))
     }
   }
 
   def add() = Action { implicit req =>
     val form = TodoCategoryForm()
-    val vv   = ViewValueTodoCategoryFormFactory.createAdd()
+    val vv   = ViewValueTodoCategoryForm()
 
     Ok(views.html.todoCategory.Add(vv, form))
   }
@@ -44,7 +44,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
     form.bindFromRequest.fold(
       formWithErrors => {
         Future {
-          val vv = ViewValueTodoCategoryFormFactory.createAdd()
+          val vv = ViewValueTodoCategoryForm()
           BadRequest(views.html.todoCategory.Add(vv, formWithErrors))
         } 
       },
@@ -64,7 +64,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
       category <- getTodoCategory(id)
     } yield {
       val form = TodoCategoryForm().fill(TodoCategoryData(category.v.name, category.v.slug, category.v.color.code))
-      val vv = ViewValueTodoCategoryFormFactory.createEdit(category.id)
+      val vv = ViewValueTodoCategoryForm(category.id)
       Ok(views.html.todoCategory.Edit(vv, form))
     }    
   }
@@ -77,7 +77,7 @@ class TodoCategoryController @Inject()(val controllerComponents: ControllerCompo
         for {
           category <- getTodoCategory(id)
         } yield {
-          val vv = ViewValueTodoCategoryFormFactory.createEdit(category.id)
+          val vv = ViewValueTodoCategoryForm(category.id)
           BadRequest(views.html.todoCategory.Edit(vv, formWithErrors))
         }
       },

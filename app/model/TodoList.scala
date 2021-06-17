@@ -10,10 +10,8 @@ case class ViewValueTodoList(items: Seq[Item], home: ViewValueHome) {
 
 object ViewValueTodoList {
   case class Item(id: Long, title: String, body: String, state: Todo.Status, categoryName: String)
-}
 
-object ViewValueTodoListFactory {
-  def create(
+  def apply(
     todoList: Seq[Todo.EmbeddedId],
     categories: Seq[TodoCategory.EmbeddedId]
   ): ViewValueTodoList = {

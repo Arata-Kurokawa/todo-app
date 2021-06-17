@@ -15,9 +15,10 @@ import lib.model.Todo
 import forms.TodoForm
 import forms.TodoEditData
 
-import model.ViewValueTodoListFactory
-import model.ViewValueTodoFormFactory
-import model.ViewValueTodoDetailFactory
+import model.ViewValueTodoList
+import model.ViewValueTodoAddForm
+import model.ViewValueTodoEditForm
+import model.ViewValueTodoDetail
 
 import useCase.TodoUseCase
 import useCase.TodoCategoryUseCase
@@ -28,7 +29,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       todoList <- TodoUseCase.all
       categories <- TodoCategoryUseCase.all
     } yield {
-      val vv = ViewValueTodoListFactory.create(todoList, categories)
+      val vv = ViewValueTodoList(todoList, categories)
       Ok(views.html.todo.Index(vv))
     }
   }
@@ -38,7 +39,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       categories <- TodoCategoryUseCase.all
     } yield {
       val form = TodoForm.add
-      val vv = ViewValueTodoFormFactory.createAdd(categories)
+      val vv = ViewValueTodoAddForm(categories)
       Ok(views.html.todo.Add(vv, form))
     }
   }
@@ -52,7 +53,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
           categories <- TodoCategoryUseCase.all
         } yield {
           val form = TodoForm.add
-          val vv = ViewValueTodoFormFactory.createAdd(categories)
+          val vv = ViewValueTodoAddForm(categories)
 
           // binding failure, you retrieve the form containing errors:
           BadRequest(views.html.todo.Add(vv, formWithErrors))
@@ -74,7 +75,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       todo       <- getTodo(id)
       categories <- TodoCategoryUseCase.all
     } yield {
-      val vv = ViewValueTodoFormFactory.createEdit(todo.id, categories)
+      val vv = ViewValueTodoEditForm(todo.id, categories)
       val form = TodoForm.edit.fill(TodoEditData(todo.v.title, todo.v.body, todo.v.state.code, todo.v.categoryId))
       Ok(views.html.todo.Edit(vv, form))
     }
@@ -89,7 +90,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
           todo       <- getTodo(id)
           categories <- TodoCategoryUseCase.all
         } yield {
-          val vv = ViewValueTodoFormFactory.createEdit(todo.id, categories)
+          val vv = ViewValueTodoEditForm(todo.id, categories)
           // binding failure, you retrieve the form containing errors:
           BadRequest(views.html.todo.Edit(vv, formWithErrors))
         }
@@ -110,7 +111,7 @@ class TodoController @Inject()(val controllerComponents: ControllerComponents) e
       todo <- getTodo(id)
       category <- TodoCategoryUseCase.get(todo.v.categoryId)
     } yield {
-      val vv = ViewValueTodoDetailFactory.create(todo, category)
+      val vv = ViewValueTodoDetail(todo, category)
       Ok(views.html.todo.Show(vv))
     }
   }

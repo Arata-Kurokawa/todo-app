@@ -10,10 +10,8 @@ case class ViewValueTodoDetail(todo: TodoItem, home: ViewValueHome) {
 
 object ViewValueTodoDetail {
   case class TodoItem(id: Todo.Id, title: String, body: String, state: Todo.Status, categoryName: String)
-}
 
-object ViewValueTodoDetailFactory {
-  def create(todo: Todo.EmbeddedId, category: Option[TodoCategory.EmbeddedId]): ViewValueTodoDetail = {
+  def apply(todo: Todo.EmbeddedId, category: Option[TodoCategory.EmbeddedId]): ViewValueTodoDetail = {
     val home = ViewValueHome(
       title  = "Todo詳細",
       cssSrc = Seq("reset.css", "main.css"),

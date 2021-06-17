@@ -8,24 +8,22 @@ case class ViewValueTodoCategoryForm(id: Option[TodoCategory.Id], home: ViewValu
   }
 }
 
-object ViewValueTodoCategoryFormFactory {
-  def createAdd(): ViewValueTodoCategoryForm = {
+object ViewValueTodoCategoryForm {
+  def apply(): ViewValueTodoCategoryForm = {
     val home = ViewValueHome(
       title  = "Todoカテゴリ作成",
       cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
-
     ViewValueTodoCategoryForm(None, home)
   }
 
-  def createEdit(id: TodoCategory.Id): ViewValueTodoCategoryForm = {
+  def apply(id: TodoCategory.Id): ViewValueTodoCategoryForm = {
     val home = ViewValueHome(
       title  = "Todoカテゴリ編集",
       cssSrc = Seq("reset.css", "main.css"),
       jsSrc  = Seq("main.js")
     )
-
     ViewValueTodoCategoryForm(Option(id), home)
   }
 }

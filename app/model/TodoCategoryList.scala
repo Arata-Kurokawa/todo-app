@@ -8,10 +8,8 @@ case class ViewValueTodoCategoryList(items: Seq[Item], home: ViewValueHome)
 
 object ViewValueTodoCategoryList {
   case class Item(id: TodoCategory.Id, name: String, slug: String, color: TodoCategory.Color)
-}
 
-object ViewValueTodoCategoryListFactory {
-  def create(
+  def apply(
     categories: Seq[TodoCategory.EmbeddedId]
   ): ViewValueTodoCategoryList = {
     val items = for {
